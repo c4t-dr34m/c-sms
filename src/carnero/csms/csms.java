@@ -89,6 +89,8 @@ public class csms extends AppWidgetProvider {
 					try {
 						count = cursor.getCount();
 
+						Log.i("c:sms", "Messages found in database: " + count);
+
 						if (count > 0) {
 							cursor.moveToFirst();
 
@@ -164,12 +166,19 @@ public class csms extends AppWidgetProvider {
 			}
 
 			// display sms info
-			if (person != null && person.length() > 0) {
-				views.setTextViewText(R.id.sender, person.toLowerCase(loc));
+
+
+			if ((person != null || address != null) && text != null) {
+				if (person != null && person.length() > 0) {
+					views.setTextViewText(R.id.sender, person.toLowerCase(loc));
+				} else {
+					views.setTextViewText(R.id.sender, address.toLowerCase(loc));
+				}
+				views.setTextViewText(R.id.message, text.toLowerCase(loc));
 			} else {
-				views.setTextViewText(R.id.sender, address.toLowerCase(loc));
+				views.setTextViewText(R.id.sender, "");
+				views.setTextViewText(R.id.message, "");
 			}
-			views.setTextViewText(R.id.message, text.toLowerCase(loc));
 
 			// set pendingintent on click
 			final Intent intentWid = new Intent(context, csms.class);
