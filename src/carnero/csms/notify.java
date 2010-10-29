@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 public class notify extends BroadcastReceiver {
 	@Override
@@ -39,7 +38,7 @@ public class notify extends BroadcastReceiver {
 			}
 
 			// fire widget update
-			final Intent intentWid = new Intent(context, csms.class);
+			final Intent intentWid = new Intent(context, csms_white.class);
 			intentWid.setAction("csmsNewMessage");
 			if (address != null && text != null) {
 				intentWid.putExtra("address", address);

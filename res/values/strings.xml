@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">c:sms</string>
+    <string name="app_name_white">c:sms (white)</string>
+    <string name="app_name_black">c:sms (black)</string>
 </resources>

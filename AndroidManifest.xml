@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		android:versionCode="1000"
-		android:versionName="1.00"
+		android:versionCode="1010"
+		android:versionName="1.10"
 		package="carnero.csms"
 		name="c:sms"
 		android:installLocation="internalOnly" >
@@ -13,10 +13,25 @@
 			android:label="@string/app_name"
 			android:icon="@drawable/csms" >
 		<receiver
-				android:name=".csms"
-				android:label="@string/app_name"
+				android:name=".csms_white"
+				android:label="@string/app_name_white"
 				android:icon="@drawable/csms" >
-			<meta-data android:name="android.appwidget.provider" android:resource="@xml/widget" />
+			<meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_white" />
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="csmsNewMessage" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="csmsTouch" />
+			</intent-filter>
+		</receiver>
+		<receiver
+				android:name=".csms_black"
+				android:label="@string/app_name_black"
+				android:icon="@drawable/csms" >
+			<meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_black" />
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
