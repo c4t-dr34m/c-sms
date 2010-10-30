@@ -157,12 +157,12 @@ public class base {
 			if (skin == WHITE) {
 				final Intent intentWid = new Intent(context, csms_white.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_UPDATE_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 			} else {
 				final Intent intentWid = new Intent(context, csms_black.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_UPDATE_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 			}
 
