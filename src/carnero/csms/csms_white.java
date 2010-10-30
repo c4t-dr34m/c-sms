@@ -15,7 +15,7 @@ public class csms_white extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
 		try {
-			csmsBase.refresh(context, ids);
+			csmsBase.refresh(base.WHITE, context, ids);
 		} catch (Exception e) {
 			// nothing
 		}
@@ -28,9 +28,9 @@ public class csms_white extends AppWidgetProvider {
 			final String address = bundle.getString("address");
 			final String text = bundle.getString("text");
 
-			csmsBase.refresh(context, address, text);
+			csmsBase.refresh(base.WHITE, context, address, text);
 		} else if (intent.getAction().equalsIgnoreCase("csmsTouch") == true) {
-			csmsBase.refresh(context);
+			csmsBase.refresh(base.WHITE, context);
 
 			try { // start default android's messaging application (will work on pure android only)
 				final Intent intentMsg = new Intent(Intent.ACTION_VIEW);

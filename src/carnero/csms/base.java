@@ -12,21 +12,26 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class base {
+	public static int BLACK = 0;
+	public static int WHITE = 1;
+
 	private final Locale loc = Locale.getDefault();
 
-	public void refresh(Context context) {
-		refresh(context, null, null, null);
+	public void refresh(int skin, Context context) {
+		refresh(skin, context, null, null, null);
 	}
 
-	public void refresh(Context context, String address, String text) {
-		refresh(context, null, address, text);
+	public void refresh(int skin, Context context, String address, String text) {
+		refresh(skin, context, null, address, text);
 	}
 
-	public void refresh(Context context, int[] ids) {
-		refresh(context, ids, null, null);
+	public void refresh(int skin, Context context, int[] ids) {
+		refresh(skin, context, ids, null, null);
 	}
 
-	public void refresh(Context context, int[] ids, String intentAddress, String intentText) {
+	public void refresh(int skin, Context context, int[] ids, String intentAddress, String intentText) {
+		RemoteViews views;
+
 		String person = null;
 		String address = null;
 		String text = null;
@@ -36,8 +41,11 @@ public class base {
 		}
 
 		final AppWidgetManager manager = AppWidgetManager.getInstance(context);
-		final RemoteViews viewsWhite = new RemoteViews("carnero.csms", R.layout.layout_white);
-		final RemoteViews viewsBlack = new RemoteViews("carnero.csms", R.layout.layout_black);
+		if (skin == WHITE) {
+			views = new RemoteViews("carnero.csms", R.layout.layout_white);
+		} else {
+			views = new RemoteViews("carnero.csms", R.layout.layout_black);
+		}
 
 		try {
 			if (intentAddress == null || intentText == null) {
@@ -135,47 +143,43 @@ public class base {
 			// display sms info
 			if ((person != null || address != null) && text != null) {
 				if (person != null && person.length() > 0) {
-					viewsWhite.setTextViewText(R.id.sender, person.toLowerCase(loc));
-					viewsBlack.setTextViewText(R.id.sender, person.toLowerCase(loc));
+					views.setTextViewText(R.id.sender, person.toLowerCase(loc));
 				} else {
-					viewsWhite.setTextViewText(R.id.sender, address.toLowerCase(loc));
-					viewsBlack.setTextViewText(R.id.sender, address.toLowerCase(loc));
+					views.setTextViewText(R.id.sender, address.toLowerCase(loc));
 				}
-				viewsWhite.setTextViewText(R.id.message, text.toLowerCase(loc));
-				viewsBlack.setTextViewText(R.id.message, text.toLowerCase(loc));
+				views.setTextViewText(R.id.message, text.toLowerCase(loc));
 			} else {
-				viewsWhite.setTextViewText(R.id.sender, null);
-				viewsBlack.setTextViewText(R.id.sender, null);
-				viewsWhite.setTextViewText(R.id.message, null);
-				viewsBlack.setTextViewText(R.id.message, null);
+				views.setTextViewText(R.id.sender, null);
+				views.setTextViewText(R.id.message, null);
 			}
 
 			// set pendingintent on click
-			final Intent intentWidWhite = new Intent(context, csms_white.class);
-			intentWidWhite.setAction("csmsTouch");
-			final PendingIntent intentPendingWhite = PendingIntent.getBroadcast(context,  0, intentWidWhite, 0);
-			viewsWhite.setOnClickPendingIntent(R.id.widget, intentPendingWhite);
-
-			final Intent intentWidBlack = new Intent(context, csms_black.class);
-			intentWidBlack.setAction("csmsTouch");
-			final PendingIntent intentPendingBlack = PendingIntent.getBroadcast(context,  0, intentWidBlack, 0);
-			viewsBlack.setOnClickPendingIntent(R.id.widget, intentPendingBlack);
+			if (skin == WHITE) {
+				final Intent intentWid = new Intent(context, csms_white.class);
+				intentWid.setAction("csmsTouch");
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
+				views.setOnClickPendingIntent(R.id.widget, intentPending);
+			} else {
+				final Intent intentWid = new Intent(context, csms_black.class);
+				intentWid.setAction("csmsTouch");
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
+				views.setOnClickPendingIntent(R.id.widget, intentPending);
+			}
 
 			if (ids != null && ids.length > 0) {
 				final int idsCnt = ids.length;
 
 				for (int i = 0; i < idsCnt; i++) {
-					manager.updateAppWidget(ids[i], viewsWhite);
-				}
-				for (int i = 0; i < idsCnt; i++) {
-					manager.updateAppWidget(ids[i], viewsBlack);
+					manager.updateAppWidget(ids[i], views);
 				}
 			} else {
-				final ComponentName componentWhite = new ComponentName(context, csms_white.class);
-				final ComponentName componentBlack = new ComponentName(context, csms_black.class);
-				
-				manager.updateAppWidget(componentWhite, viewsWhite);
-				manager.updateAppWidget(componentBlack, viewsBlack);
+				if (skin == WHITE) {
+					final ComponentName component = new ComponentName(context, csms_white.class);
+					manager.updateAppWidget(component, views);
+				} else {
+					final ComponentName component = new ComponentName(context, csms_black.class);
+					manager.updateAppWidget(component, views);
+				}
 			}
 		} catch (Exception e) {
 			// nothing
