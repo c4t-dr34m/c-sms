@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.RemoteViews;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -47,7 +48,7 @@ public class base {
 			views = new RemoteViews("carnero.csms", R.layout.layout_black);
 		}
 
-		try {
+		// try {
 			if (intentAddress == null || intentText == null) {
 				ArrayList<message> msgs = new ArrayList<message>();
 				int count = 0;
@@ -108,11 +109,17 @@ public class base {
 						}
 					}
 
-					final message msg = msgs.get(0);
+					final message message = msgs.get(0);
 
-					address = msg.address.toLowerCase(loc);
-					person = msg.person.toLowerCase(loc);
-					text = msg.text.toLowerCase(loc);
+					if (message.address != null) {
+						address = message.address.toLowerCase(loc);
+					}
+					if (message.person != null) {
+						person = message.person.toLowerCase(loc);
+					}
+					if (message.address != null) {
+						text = message.text.toLowerCase(loc);
+					}
 				}
 			} else {
 				address = intentAddress.toLowerCase(loc);
@@ -141,11 +148,13 @@ public class base {
 			}
 
 			// display sms info
-			if ((person != null || address != null) && text != null) {
+			if (text != null) {
 				if (person != null && person.length() > 0) {
 					views.setTextViewText(R.id.sender, person.toLowerCase(loc));
-				} else {
+				} else if (address != null && address.length() > 0) {
 					views.setTextViewText(R.id.sender, address.toLowerCase(loc));
+				} else {
+					views.setTextViewText(R.id.sender, null);
 				}
 				views.setTextViewText(R.id.message, text.toLowerCase(loc));
 			} else {
@@ -157,12 +166,12 @@ public class base {
 			if (skin == WHITE) {
 				final Intent intentWid = new Intent(context, csms_white.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_ONE_SHOT);
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 			} else {
 				final Intent intentWid = new Intent(context, csms_black.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_ONE_SHOT);
+				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 			}
 
@@ -181,8 +190,8 @@ public class base {
 					manager.updateAppWidget(component, views);
 				}
 			}
-		} catch (Exception e) {
+		// } catch (Exception e) {
 			// nothing
-		}
+		// }
 	}
 }
