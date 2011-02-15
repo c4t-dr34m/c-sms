@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		android:versionCode="1020"
-		android:versionName="1.20"
+		android:versionCode="1030"
+		android:versionName="1.30"
 		package="carnero.csms"
 		name="c:sms"
 		android:installLocation="internalOnly" >
