@@ -172,13 +172,13 @@ public class base {
 				// touch
 				intentWid = new Intent(context, csms_white.class);
 				intentWid.setAction("csmsTouch");
-				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 
 				// update
 				intentWid = new Intent(context, csms_white.class);
 				intentWid.setAction("csmsUpdate");
-				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
 
 				alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 				alarmManager.cancel(intentPending);
@@ -187,13 +187,13 @@ public class base {
 				// touch
 				intentWid = new Intent(context, csms_black.class);
 				intentWid.setAction("csmsTouch");
-				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
 
 				// update
 				intentWid = new Intent(context, csms_black.class);
 				intentWid.setAction("csmsUpdate");
-				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, 0);
 
 				alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 				alarmManager.cancel(intentPending);
