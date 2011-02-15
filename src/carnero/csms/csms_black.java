@@ -29,6 +29,8 @@ public class csms_black extends AppWidgetProvider {
 			final String text = bundle.getString("text");
 
 			csmsBase.refresh(base.BLACK, context, address, text);
+		} else if (intent.getAction().equalsIgnoreCase("csmsUpdate") == true) {
+			csmsBase.refresh(base.BLACK, context);
 		} else if (intent.getAction().equalsIgnoreCase("csmsTouch") == true) {
 			csmsBase.refresh(base.BLACK, context);
 

@@ -1,5 +1,6 @@
 package carnero.csms;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -7,12 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class base {
+	public static long refreshInterval = (5 * 60 * 1000); // five mins
 	public static int BLACK = 0;
 	public static int WHITE = 1;
 
@@ -48,8 +49,8 @@ public class base {
 			views = new RemoteViews("carnero.csms", R.layout.layout_black);
 		}
 
-		// try {
-			if (intentAddress == null || intentText == null) {
+		try {
+			if (intentAddress == null || intentText == null) { // no message received, read from database
 				ArrayList<message> msgs = new ArrayList<message>();
 				int count = 0;
 
@@ -121,7 +122,7 @@ public class base {
 						text = message.text.toLowerCase(loc);
 					}
 				}
-			} else {
+			} else { // we have new message, get it from intent
 				address = intentAddress.toLowerCase(loc);
 				text = intentText.toLowerCase(loc);
 
@@ -163,16 +164,40 @@ public class base {
 			}
 
 			// set pendingintent on click
+			Intent intentWid = null;
+			PendingIntent intentPending = null;
+			AlarmManager alarmManager = null;
+
 			if (skin == WHITE) {
-				final Intent intentWid = new Intent(context, csms_white.class);
+				// touch
+				intentWid = new Intent(context, csms_white.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
+
+				// update
+				intentWid = new Intent(context, csms_white.class);
+				intentWid.setAction("csmsUpdate");
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+
+				alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+				alarmManager.cancel(intentPending);
+				alarmManager.setInexactRepeating(AlarmManager.RTC, (System.currentTimeMillis() + refreshInterval), refreshInterval, intentPending);
 			} else {
-				final Intent intentWid = new Intent(context, csms_black.class);
+				// touch
+				intentWid = new Intent(context, csms_black.class);
 				intentWid.setAction("csmsTouch");
-				final PendingIntent intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
 				views.setOnClickPendingIntent(R.id.widget, intentPending);
+
+				// update
+				intentWid = new Intent(context, csms_black.class);
+				intentWid.setAction("csmsUpdate");
+				intentPending = PendingIntent.getBroadcast(context,  0, intentWid, PendingIntent.FLAG_CANCEL_CURRENT);
+
+				alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+				alarmManager.cancel(intentPending);
+				alarmManager.setInexactRepeating(AlarmManager.RTC, (System.currentTimeMillis() + refreshInterval), refreshInterval, intentPending);
 			}
 
 			if (ids != null && ids.length > 0) {
@@ -190,8 +215,8 @@ public class base {
 					manager.updateAppWidget(component, views);
 				}
 			}
-		// } catch (Exception e) {
+		} catch (Exception e) {
 			// nothing
-		// }
+		}
 	}
 }

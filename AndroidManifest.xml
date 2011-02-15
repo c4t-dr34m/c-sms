@@ -41,6 +41,9 @@
 			<intent-filter>
 				<action android:name="csmsTouch" />
 			</intent-filter>
+			<intent-filter>
+				<action android:name="csmsUpdate" />
+			</intent-filter>
 		</receiver>
 		<receiver
 				android:name=".notify"
