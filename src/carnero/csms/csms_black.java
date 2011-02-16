@@ -28,22 +28,47 @@ public class csms_black extends AppWidgetProvider {
 			final String address = bundle.getString("address");
 			final String text = bundle.getString("text");
 
-			csmsBase.refresh(base.BLACK, context, address, text);
+			(new refresh(context, address, text)).start();
 		} else if (intent.getAction().equalsIgnoreCase("csmsUpdate") == true) {
-			csmsBase.refresh(base.BLACK, context);
+			(new refresh(context)).start();
 		} else if (intent.getAction().equalsIgnoreCase("csmsTouch") == true) {
-			csmsBase.refresh(base.BLACK, context);
-
 			try { // start default android's messaging application (will work on pure android only)
-				final Intent intentMsg = new Intent(Intent.ACTION_VIEW);
+				final Intent intentMsg = new Intent(Intent.ACTION_MAIN);
 				intentMsg.setClassName("com.android.mms", "com.android.mms.ui.ConversationList");
-				final PendingIntent intentPending = PendingIntent.getActivity(context, 0, intentMsg, PendingIntent.FLAG_UPDATE_CURRENT);
+				final PendingIntent intentPending = PendingIntent.getActivity(context, 0, intentMsg, 0);
 				intentPending.send();
 			} catch (Exception e) {
 				// nothing
 			}
+
+			(new refresh(context)).start();
 		}
 
 		super.onReceive(context, intent);
+	}
+
+	private class refresh extends Thread {
+		private Context ctx = null;
+		private String add = null;
+		private String txt = null;
+
+		public refresh(Context context) {
+			ctx = context;
+		}
+
+		public refresh(Context context, String address, String text) {
+			ctx = context;
+			add = address;
+			txt = text;
+		}
+
+		@Override
+		public void run() {
+			if (add == null && txt == null) {
+				csmsBase.refresh(base.BLACK, ctx);
+			} else {
+				csmsBase.refresh(base.BLACK, ctx, add, txt);
+			}
+		}
 	}
 }
