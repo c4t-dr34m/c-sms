@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -146,6 +147,11 @@ public class base {
 						cursorContact.close();
 					}
 				}
+				
+				final Uri smsUri = Uri.parse("content://sms/inbox");
+				final ContentValues values = new ContentValues();
+				values.put("read", "1");
+				context.getContentResolver().update(smsUri, values, " address='" + intentAddress + "'and body='" + intentText + "'", null);
 			}
 
 			// display sms info
